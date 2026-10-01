@@ -2,449 +2,303 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comparativo Aprovado × Realizado</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estudo x Fechamento - K599 Fujimoto (2º lote)</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f5f0;--surface:#fff;--surface2:#f0f0eb;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.13);
+  --text:#1a1a1a;--muted:#888;--muted2:#555;
+  --blue:#2563eb;--blue-bg:#eff4ff;--blue-border:rgba(37,99,235,0.25);
+  --orange:#ea580c;--orange-bg:#fff7ed;--orange-border:rgba(234,88,12,0.25);
+  --green:#1e9e62;--green-bg:#e8f7f0;--green-border:rgba(30,158,98,0.25);
+  --red:#dc2626;--red-bg:#fff1f1;--red-border:rgba(220,38,38,0.25);
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-border:rgba(124,58,237,0.2);
+}
+body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;min-height:100vh}
+.hero{background:var(--surface);border-bottom:1px solid var(--border2);padding:40px 48px 36px}
+.hero-eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:10px}
+.hero-title{font-size:clamp(24px,3.5vw,36px);font-weight:700;line-height:1.15;color:var(--text)}
+.hero-title span{color:var(--blue)}
+.hero-meta{display:flex;gap:28px;flex-wrap:wrap;margin-top:20px}
+.hero-meta-item{display:flex;flex-direction:column;gap:2px}
+.hero-meta-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.hero-meta-val{font-size:14px;font-weight:600;color:var(--text)}
+.hero-badge{border-radius:10px;padding:7px 16px;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;margin-top:22px;background:var(--red-bg);border:1.5px solid var(--red-border);color:var(--red)}
+.main{padding:36px 48px;max-width:1200px;margin:0 auto}
+.tabs{display:flex;gap:6px;margin-bottom:32px;flex-wrap:wrap}
+.tab{padding:9px 24px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);color:var(--muted);font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .18s}
+.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.tab:hover:not(.active){border-color:var(--blue);color:var(--blue)}
+.section{display:none}.section.active{display:block;animation:fadeUp .3s ease}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:16px;margin-bottom:28px}
+.kpi-card{background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-card.blue::before{background:var(--blue)}.kpi-card.red::before{background:var(--red)}.kpi-card.orange::before{background:var(--orange)}.kpi-card.purple::before{background:var(--purple)}
+.kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+.kpi-val{font-size:22px;font-weight:700;line-height:1.1}
+.kpi-card.blue .kpi-val{color:var(--blue)}.kpi-card.red .kpi-val{color:var(--red)}.kpi-card.orange .kpi-val{color:var(--orange)}.kpi-card.purple .kpi-val{color:var(--purple)}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:6px;font-weight:400}
+.table-wrap{background:var(--surface);border:1.5px solid var(--border2);border-radius:16px;overflow:hidden;margin-bottom:28px}
+.table-head{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr 1fr;padding:12px 24px;background:var(--surface2);border-bottom:1px solid var(--border2);font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.table-row{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr 1fr;padding:14px 24px;border-bottom:1px solid var(--border);align-items:center;transition:background .15s}
+.table-row:last-child{border-bottom:none}.table-row:hover{background:var(--surface2)}
+.table-row.total{background:var(--surface2);border-top:1.5px solid var(--border2)}
+.cat-name{font-size:13px;font-weight:600}
+.val{font-size:12px;font-weight:500;text-align:right;color:var(--muted2)}
+.val.hi{color:var(--text);font-weight:600}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;float:right}
+.badge.down{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.badge.up{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.badge.neutral{background:var(--surface2);color:var(--muted);border:1px solid var(--border2)}
+.bar-wrap{grid-column:1/-1;height:2px;background:rgba(0,0,0,0.06);border-radius:2px;margin-top:8px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;transition:width 1s ease}
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+@media(max-width:700px){.charts-grid{grid-template-columns:1fr}}
+.chart-wrap{background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:24px}
+.chart-wrap.full{grid-column:1/-1}
+.chart-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:16px}
+.chart-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.leg-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted2);font-weight:500}
+.leg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.unit-card-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:28px;max-width:780px}
+.unit-card{background:var(--surface);border:1.5px solid var(--border2);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden}
+.unit-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.unit-card.blue::before{background:var(--blue)}.unit-card.orange::before{background:var(--orange)}.unit-card.red::before{background:var(--red)}
+.unit-card-label{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
+.unit-card-val{font-size:24px;font-weight:700}
+.unit-card.blue .unit-card-val{color:var(--blue)}.unit-card.orange .unit-card-val{color:var(--orange)}.unit-card.red .unit-card-val{color:var(--red)}
+.unit-card-sub{font-size:10.5px;color:var(--muted);margin-top:5px}
+.table-row.parent{cursor:pointer}
+.table-row.parent .cat-name::before{content:'▸ ';display:inline-block;color:var(--muted);font-size:10px;transition:transform .15s;transform:translateX(0)}
+.table-row.parent.open .cat-name::before{content:'▾ '}
+.table-row.sub{display:none;grid-template-columns:2.2fr 1fr 1fr 1fr 1fr;padding:10px 24px 10px 48px;border-bottom:1px solid var(--border);background:var(--surface2)}
+.table-row.sub.show{display:grid}
+.table-row.sub .cat-name{font-size:11.5px;font-weight:500;color:var(--muted2)}
+.table-row.sub .val{font-size:11px}
+.unit-product-info{background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:24px;margin-bottom:28px;display:flex;gap:32px;flex-wrap:wrap;align-items:center}
+.unit-product-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
+.unit-product-val{font-size:14px;font-weight:600;color:var(--text)}
+.fx-panel{margin-top:22px;padding-top:18px;border-top:1px solid var(--border2)}
+.fx-panel-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.fx-panel-title .fx-note{text-transform:none;font-weight:400;letter-spacing:normal;color:var(--muted);font-size:11.5px}
+.fx-grid{display:flex;gap:12px;flex-wrap:wrap}
+.fx-item{background:var(--surface2);border:1px solid var(--border2);border-left:3px solid var(--border2);border-radius:10px;padding:10px 16px;display:flex;flex-direction:column;gap:3px;min-width:130px}
+.fx-item.ref{border-left-color:var(--blue)}
+.fx-label{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.fx-val{font-size:16px;font-weight:700;color:var(--text)}
+.fx-badge{font-size:10.5px;font-weight:600}
+.fx-badge.up{color:var(--red)}
+.fx-badge.down{color:var(--green)}
+@media(max-width:600px){.fx-grid{gap:8px}.fx-item{min-width:104px;padding:8px 12px}}
+@keyframes tabPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(37,99,235,0)}50%{transform:scale(1.07);box-shadow:0 0 0 4px rgba(37,99,235,.18);border-color:var(--blue);color:var(--blue)}}
+.tabs:not(.seen) .tab:not(.active){animation:tabPulse 2s ease-in-out infinite}
+.tabs:not(.seen) .tab:nth-child(2){animation-delay:.3s}.tabs:not(.seen) .tab:nth-child(3){animation-delay:.6s}
+.tab:hover:not(.active){animation:none!important}
+@media(prefers-reduced-motion:reduce){.tabs .tab{animation:none!important}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.main{padding:20px 16px}.hero{padding:28px 20px}.unit-card-grid{grid-template-columns:1fr}}
 
-  :root {
-    --bg: #0d0d0f;
-    --surface: #16161a;
-    --surface2: #1e1e24;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --text: #f0ede8;
-    --muted: #7a7880;
-    --muted2: #a09da8;
-    --approve: #4e9cf5;
-    --approve-dim: rgba(78,156,245,0.12);
-    --real: #f0a04b;
-    --real-dim: rgba(240,160,75,0.12);
-    --green: #56d18c;
-    --green-dim: rgba(86,209,140,0.12);
-    --red: #f26262;
-    --red-dim: rgba(242,98,98,0.12);
-    --accent: #c9b8ff;
-  }
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--purple-bg:#221a3a;--purple:#a78bfa;--bg:#121212;--surface:#1c1c1c;--surface2:#262626;--border:rgba(255,255,255,.09);--border2:rgba(255,255,255,.15);--text:#f2f2f2;--muted:#9a9a9a;--muted2:#c2c2c2;--blue-bg:#16213a;--green-bg:#10281e;--red-bg:#2e1616;}}
+:root[data-theme="dark"]{--purple-bg:#221a3a;--purple:#a78bfa;--bg:#121212;--surface:#1c1c1c;--surface2:#262626;--border:rgba(255,255,255,.09);--border2:rgba(255,255,255,.15);--text:#f2f2f2;--muted:#9a9a9a;--muted2:#c2c2c2;--blue-bg:#16213a;--green-bg:#10281e;--red-bg:#2e1616;}
+body{background:var(--bg)}
+.hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.hero-badges .hero-badge{margin-top:0}
+.hero-badge.info{background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue)}
+.hero-badge.warn{background:var(--orange-bg);border-color:var(--orange-border);color:var(--orange)}
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.note{background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:20px 22px;font-size:12.5px;line-height:1.6;color:var(--muted2)}
+.note h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px}
+.note b{color:var(--text)}.note ul{padding-left:18px}.note li{margin-bottom:6px}
+.rates{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.rate{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:6px 12px;font-size:11.5px}
+.rate.chg{border-color:var(--green-border);background:var(--green-bg);color:var(--green);font-weight:600}
+.h2{font-size:13px;font-weight:700;margin:6px 0 12px}
+.tbl-sub{font-size:11.5px;color:var(--muted);font-weight:400;margin-left:6px}
+@media(max-width:700px){.notes{grid-template-columns:1fr}.table-head,.table-row,.table-row.sub{grid-template-columns:1.6fr 1fr 1fr;padding-left:14px;padding-right:14px}.table-head span:nth-child(n+4),.table-row>span:nth-child(n+4){display:none}}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    min-height: 100vh;
-    padding: 48px 32px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  /* HEADER */
-  .header {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: start;
-    gap: 24px;
-    margin-bottom: 48px;
-    padding-bottom: 32px;
-    border-bottom: 1px solid var(--border2);
-    position: relative;
-  }
-  .header::after {
-    content: '';
-    position: absolute;
-    bottom: -1px; left: 0;
-    width: 80px; height: 2px;
-    background: var(--accent);
-  }
-  .header-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .header-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(28px, 4vw, 42px);
-    font-weight: 400;
-    line-height: 1.1;
-    color: var(--text);
-  }
-  .header-title em {
-    font-style: italic;
-    color: var(--accent);
-  }
-  .header-badge {
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: 12px;
-    padding: 12px 20px;
-    text-align: right;
-    white-space: nowrap;
-  }
-  .header-badge-label { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; font-family: 'DM Mono', monospace; }
-  .header-badge-val { font-family: 'DM Mono', monospace; font-size: 22px; color: var(--red); margin-top: 4px; }
-
-  /* KPI CARDS */
-  .kpis {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 40px;
-  }
-  .kpi {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px 24px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.2s;
-    animation: fadeUp 0.5s ease both;
-  }
-  .kpi:hover { border-color: var(--border2); }
-  .kpi::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-  }
-  .kpi.blue::before { background: var(--approve); }
-  .kpi.orange::before { background: var(--real); }
-  .kpi.red::before { background: var(--red); }
-  .kpi.green::before { background: var(--green); }
-  .kpi-label { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; font-family: 'DM Mono', monospace; margin-bottom: 10px; }
-  .kpi-val { font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 500; }
-  .kpi.blue .kpi-val { color: var(--approve); }
-  .kpi.orange .kpi-val { color: var(--real); }
-  .kpi.red .kpi-val { color: var(--red); }
-  .kpi.green .kpi-val { color: var(--green); }
-  .kpi-sub { font-size: 12px; color: var(--muted2); margin-top: 6px; }
-
-  /* TABS */
-  .tabs { display: flex; gap: 4px; margin-bottom: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 4px; width: fit-content; }
-  .tab { padding: 8px 20px; border-radius: 8px; border: none; background: transparent; color: var(--muted); font-family: 'Syne', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; }
-  .tab.active { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
-
-  /* TABLE */
-  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 32px; animation: fadeUp 0.5s 0.1s ease both; }
-  .table-head { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 0; padding: 14px 24px; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
-  .table-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 0; padding: 16px 24px; border-bottom: 1px solid var(--border); align-items: center; transition: background 0.15s; cursor: default; }
-  .table-row:last-child { border-bottom: none; }
-  .table-row:hover { background: rgba(255,255,255,0.03); }
-  .table-row .cat { font-size: 14px; font-weight: 600; }
-  .table-row .val { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted2); text-align: right; }
-  .table-row .val.real { color: var(--text); }
-  .badge { display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 3px 8px; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; }
-  .badge.up { background: var(--red-dim); color: var(--red); }
-  .badge.down { background: var(--green-dim); color: var(--green); }
-  .bar-wrap { grid-column: 1 / -1; height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-top: 8px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
-
-  /* CHARTS GRID */
-  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px; }
-  @media (max-width: 680px) { .charts-grid { grid-template-columns: 1fr; } }
-  .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; animation: fadeUp 0.5s 0.2s ease both; }
-  .chart-card.full { grid-column: 1 / -1; }
-  .chart-title { font-size: 13px; font-weight: 600; color: var(--muted2); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 20px; font-family: 'DM Mono', monospace; }
-
-  /* UNIT SECTION */
-  .unit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px; }
-  @media (max-width: 680px) { .unit-grid { grid-template-columns: 1fr; } }
-  .unit-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 8px; }
-  .unit-card-label { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
-  .unit-card-val { font-family: 'DM Serif Display', serif; font-size: 36px; }
-  .unit-card.blue .unit-card-val { color: var(--approve); }
-  .unit-card.orange .unit-card-val { color: var(--real); }
-  .unit-card-sub { font-size: 12px; color: var(--muted2); }
-  .unit-diff { background: var(--red-dim); border: 1px solid rgba(242,98,98,0.2); border-radius: 16px; padding: 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .unit-diff-label { font-size: 12px; color: var(--muted2); font-family: 'DM Mono', monospace; }
-  .unit-diff-val { font-family: 'DM Serif Display', serif; font-size: 48px; color: var(--red); }
-
-  /* SECTION */
-  .section { display: none; }
-  .section.active { display: block; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* LEGEND */
-  .legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted2); font-family: 'DM Mono', monospace; }
-  .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
-
-  /* TOOLTIP custom */
-  .tooltip-box { position: fixed; background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 10px 14px; font-size: 12px; pointer-events: none; display: none; z-index: 100; font-family: 'DM Mono', monospace; color: var(--text); }
+.calc-wrap{background:var(--surface);border:1.5px solid var(--border2);border-radius:16px;overflow:hidden;margin-bottom:28px}
+.calc-scroll{overflow-x:auto}
+.calc{width:100%;border-collapse:collapse;font-size:12px;min-width:640px}
+.calc th{background:var(--surface2);font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;padding:12px 14px;text-align:right;border-bottom:1px solid var(--border2);white-space:nowrap}
+.calc td{padding:11px 14px;text-align:right;border-bottom:1px solid var(--border);color:var(--muted2);white-space:nowrap}
+.calc th:first-child,.calc td:first-child{text-align:left}
+.calc td:first-child{font-weight:600;color:var(--text);white-space:normal}
+.calc td.hi{color:var(--text);font-weight:600}
+.calc tr.sum td{font-weight:600;color:var(--text)}
+.calc td.lbl{text-align:right}
+.calc tr.pk td{background:var(--purple-bg);color:var(--purple);font-weight:700;font-size:13.5px;padding-top:15px;padding-bottom:15px;border-bottom:none;border-top:1.5px solid var(--purple-border)}
+.calc tr.pk td .pk-sub{display:block;font-size:11px;font-weight:400;color:var(--muted2);margin-top:2px}
+.calc tr.rat td{background:var(--purple-bg);font-weight:500;color:var(--text);padding-top:8px;padding-bottom:8px;border-bottom:none}
+.calc tr.rat td.lbl{padding-right:14px}
+.calc tr.rat.last td{border-bottom:1.5px solid var(--purple-border);padding-bottom:13px}
+.calc tr.rat b{font-weight:700}
+.calc tr.lote td{font-weight:700;color:var(--text)}
+.calc tr.grand td{background:var(--surface2);font-weight:700;color:var(--text);border-bottom:none}
+.calc-note{padding:14px 18px;font-size:11.5px;line-height:1.6;color:var(--muted2);border-top:1px solid var(--border2)}
+.calc-note b{color:var(--text)}
+.formula{display:block;font-size:10.5px;font-weight:400;color:var(--muted);margin-top:2px}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <div>
-    <div class="header-eyebrow">Processo de importação — fechamento</div>
-    <h1 class="header-title">Aprovado <em>×</em><br>Realizado</h1>
+<div class="hero">
+  <div class="hero-eyebrow">K599 · FUJIMOTO 11 SC · 2º LOTE</div>
+  <h1 class="hero-title">Estudo <span>x</span> Realizado</h1>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><span class="hero-meta-label">Cliente</span><span class="hero-meta-val">Fujimoto</span></div>
+    <div class="hero-meta-item"><span class="hero-meta-label">Produto</span><span class="hero-meta-val">Arame Recozido Duplo Torcido</span></div>
+    <div class="hero-meta-item"><span class="hero-meta-label">Especificação</span><span class="hero-meta-val">BWG 18 - 27.000 kg (1 CNTR)</span></div>
   </div>
-  <div class="header-badge">
-    <div class="header-badge-label">Variação total</div>
-    <div class="header-badge-val">+11,94%</div>
+  <div class="hero-badges">
+    <div class="hero-badge">+10,21% acima do estudo</div>
+    <div class="hero-badge info">2º lote · 27 t (4º container)</div>
+    <div class="hero-badge warn">Prévia de fechamento</div>
   </div>
-</div>
-
-<div class="kpis">
-  <div class="kpi blue" style="animation-delay:0s">
-    <div class="kpi-label">Total aprovado</div>
-    <div class="kpi-val">R$ 274.973</div>
-    <div class="kpi-sub">Orçamento inicial</div>
-  </div>
-  <div class="kpi orange" style="animation-delay:0.07s">
-    <div class="kpi-label">Total realizado</div>
-    <div class="kpi-val">R$ 307.795</div>
-    <div class="kpi-sub">Custo efetivo</div>
-  </div>
-  <div class="kpi red" style="animation-delay:0.14s">
-    <div class="kpi-label">Diferença</div>
-    <div class="kpi-val">+R$ 32.822</div>
-    <div class="kpi-sub">Acima do orçado</div>
-  </div>
-  <div class="kpi green" style="animation-delay:0.21s">
-    <div class="kpi-label">Total líquido</div>
-    <div class="kpi-val">R$ 258.660</div>
-    <div class="kpi-sub">Após crédito tributário</div>
-  </div>
-</div>
-
-<div class="tabs">
-  <button class="tab active" onclick="showTab('geral')">Visão geral</button>
-  <button class="tab" onclick="showTab('unit')">Custo unitário</button>
-</div>
-
-<!-- TAB GERAL -->
-<div id="tab-geral" class="section active">
-  <div class="table-wrap">
-    <div class="table-head">
-      <span>Categoria</span>
-      <span style="text-align:right">Aprovado</span>
-      <span style="text-align:right">Realizado</span>
-      <span style="text-align:right">Diferença</span>
-      <span style="text-align:right">Variação</span>
-    </div>
-    <!-- rows injected by JS -->
-  </div>
-
-  <div class="charts-grid">
-    <div class="chart-card full">
-      <div class="chart-title">Comparativo por categoria</div>
-      <div class="legend">
-        <span class="legend-item"><span class="legend-dot" style="background:var(--approve)"></span>Aprovado</span>
-        <span class="legend-item"><span class="legend-dot" style="background:var(--real)"></span>Realizado</span>
-      </div>
-      <div style="position:relative;height:300px">
-        <canvas id="barChart" role="img" aria-label="Gráfico de barras comparando aprovado e realizado por categoria"></canvas>
-      </div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-title">Variação % por categoria</div>
-      <div style="position:relative;height:280px">
-        <canvas id="varChart" role="img" aria-label="Variação percentual por categoria"></canvas>
-      </div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-title">Composição do realizado</div>
-      <div style="position:relative;height:280px">
-        <canvas id="pieChart" role="img" aria-label="Composição do custo realizado por categoria"></canvas>
-      </div>
+  <div class="fx-panel">
+    <div class="fx-panel-title">Taxas de câmbio utilizadas</div>
+    <div class="fx-grid">
+      <div class="fx-item ref"><span class="fx-label">Estudo (referência)</span><span class="fx-val">R$ 5,1500</span></div>
+      <div class="fx-item"><span class="fx-label">Câmbio 20% (entrada)</span><span class="fx-val">R$ 5,3050</span><span class="fx-badge up">+3,01% vs ref.</span></div>
+      <div class="fx-item"><span class="fx-label">Câmbio 80% (SWIFT)</span><span class="fx-val">R$ 5,2132</span><span class="fx-badge up">+1,23% vs ref.</span></div>
+      <div class="fx-item"><span class="fx-label">Registro (Des.)</span><span class="fx-val">R$ 5,2132</span><span class="fx-badge up">+1,23% vs ref.</span></div>
     </div>
   </div>
 </div>
-
-<!-- TAB UNIT -->
-<div id="tab-unit" class="section">
-  <div class="unit-grid">
-    <div class="unit-card blue">
-      <div class="unit-card-label">Custo unitário aprovado</div>
-      <div class="unit-card-val">R$ 11.955,37</div>
-      <div class="unit-card-sub">Valor orçado por unidade</div>
-    </div>
-    <div class="unit-card orange">
-      <div class="unit-card-label">Custo unitário realizado</div>
-      <div class="unit-card-val">R$ 13.382,40</div>
-      <div class="unit-card-sub">Custo efetivo por unidade</div>
-    </div>
-  </div>
-  <div class="unit-diff" style="margin-bottom:32px">
-    <div>
-      <div class="unit-diff-label">Diferença unitária</div>
-      <div style="font-size:13px;color:var(--muted2);margin-top:6px;font-family:'DM Mono',monospace">R$ 13.382,40 − R$ 11.955,37</div>
-    </div>
-    <div style="text-align:right">
-      <div class="unit-diff-val">+11,94%</div>
-      <div style="font-family:'DM Mono',monospace;font-size:14px;color:var(--red)">+ R$ 1.427,03 / un.</div>
-    </div>
+<div class="main">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('geral',event)">Visão geral</button>
+    <button class="tab" onclick="showTab('desemb',event)">Desembaraço</button>
+    <button class="tab" onclick="showTab('unit',event)">Custo unitário</button>
   </div>
 
-  <div class="chart-card" style="margin-bottom:32px">
-    <div class="chart-title">Custo unitário: aprovado × realizado</div>
-    <div class="legend">
-      <span class="legend-item"><span class="legend-dot" style="background:var(--approve)"></span>Aprovado R$ 11.955</span>
-      <span class="legend-item"><span class="legend-dot" style="background:var(--real)"></span>Realizado R$ 13.382</span>
+  <div id="tab-geral" class="section active">
+    <div class="notes">
+      <div class="note"><h3>Escopo</h3>
+        Processo de <b>4 containers entrepostados</b>. Este comparativo cobre o <b>2º lote (1 cntr · 27 t)</b>, correspondente ao <b>4º container</b>. O 1º lote (3 cntrs · 81 t) foi apresentado em relatório separado.
+        <br><br>O fechamento é uma <b>prévia</b>: a armazenagem do 3º período está projetada até <b>05/10/2026</b> e os valores podem ser ajustados até o fechamento definitivo.
+        <br><br>Estudo e fechamento ajustados para 1 cntr.</div>
+      <div class="note"><h3>NCM ajustada para redução de alíquotas</h3>
+        A NCM foi ajustada de <b>7217.10.90</b> para <b>7217.10.19</b>, reduzindo o II de <b>25% para 12%</b>. Demais alíquotas mantidas.
+        <div class="rates"><span class="rate chg">II 25% → 12%</span><span class="rate">IPI 3,25%</span><span class="rate">PIS 2,10%</span><span class="rate">COFINS 9,65%</span></div>
+        <br>Economia estimada só no II: <b>≈ R$ 12,2 mil</b> (proporcional, mesma base do fechamento).</div>
     </div>
-    <div style="position:relative;height:180px">
-      <canvas id="unitChart" role="img" aria-label="Comparativo custo unitário aprovado vs realizado"></canvas>
+    <div class="kpi-grid">
+      <div class="kpi-card blue"><div class="kpi-label">Total estudo</div><div class="kpi-val">R$ 152.542</div><div class="kpi-sub">Custo total previsto</div></div>
+      <div class="kpi-card red"><div class="kpi-label">Total fechamento (prévia)</div><div class="kpi-val">R$ 168.118</div><div class="kpi-sub">Custo total apurado até o momento</div></div>
+      <div class="kpi-card red"><div class="kpi-label">Diferença</div><div class="kpi-val">+R$ 15.576</div><div class="kpi-sub"></div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Principal desvio</div><div class="kpi-val">+R$ 25.007</div><div class="kpi-sub">Desembaraço (armazenagem em entreposto)</div></div>
+    </div>
+    <div class="note" style="margin-bottom:28px"><h3>Principais movimentos</h3><ul>
+      <li><b>Desembaraço +R$ 25,0 mil (+439,4%)</b>: 3 períodos de armazenagem (22/06 a 05/10/2026, prévia) e 25% do Pacote Braskarne. Detalhes na aba Desembaraço.</li>
+      <li><b>Frete internacional +R$ 5,2 mil (+97,9%)</b>: de US$ 1.000 para US$ 2.000 por container (1 cntr).</li>
+      <li><b>Impostos −R$ 10,1 mil (−28,1%)</b>: efeito da NCM ajustada (II 25% → 12%), mesmo com base e câmbio maiores.</li>
+      <li><b>Frete terrestre −R$ 5,0 mil (−30,3%)</b>: fechamento R$ 11.400 contra R$ 16.350 do estudo.</li></ul></div>
+    <div class="table-wrap" id="mainTable"><div class="table-head"><span>Categoria (clique para detalhar)</span><span style="text-align:right">Estudo</span><span style="text-align:right">Fechamento</span><span style="text-align:right">Diferença</span><span style="text-align:right">Variação</span></div></div>
+    <div class="charts-grid">
+      <div class="chart-wrap full"><div class="chart-title">Comparativo por categoria</div>
+        <div class="chart-legend"><span class="leg-item"><span class="leg-dot" style="background:#2563eb"></span>Estudo</span><span class="leg-item"><span class="leg-dot" style="background:#ea580c"></span>Fechamento</span></div>
+        <div style="position:relative;height:320px"><canvas id="barChart"></canvas></div></div>
+      <div class="chart-wrap"><div class="chart-title">Diferença em R$ por categoria</div><div style="position:relative;height:300px"><canvas id="varChart"></canvas></div></div>
+      <div class="chart-wrap"><div class="chart-title">Composição do fechamento</div><div style="position:relative;height:300px"><canvas id="pieChart"></canvas></div></div>
     </div>
   </div>
 
-  <div class="chart-card">
-    <div class="chart-title">Contribuição de cada categoria ao custo unitário realizado</div>
-    <div style="position:relative;height:280px">
-      <canvas id="unitPieChart" role="img" aria-label="Composição do custo unitário realizado"></canvas>
+  <div id="tab-desemb" class="section">
+    <div class="kpi-grid">
+      <div class="kpi-card blue"><div class="kpi-label">Desembaraço estudo</div><div class="kpi-val">R$ 5.691</div><div class="kpi-sub">Seção 4 do estudo</div></div>
+      <div class="kpi-card red"><div class="kpi-label">Desembaraço fechamento</div><div class="kpi-val">R$ 30.698</div><div class="kpi-sub">+R$ 25.007 (+439,4%)</div></div>
+      <div class="kpi-card orange"><div class="kpi-label">Armazenagem (3 períodos)</div><div class="kpi-val">R$ 19.874</div><div class="kpi-sub">64,7% do desembaraço · 22/06 a 05/10/2026 (prévia)</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Pacote Braskarne</div><div class="kpi-val">R$ 7.255</div><div class="kpi-sub">25% do pacote de R$ 29.021,76 (carga toda) · não previsto</div></div>
+    </div>
+    <div class="h2">Despesas de desembaraço aduaneiro <span class="tbl-sub">seção 4</span></div>
+    <div class="table-wrap" id="tblDesemb"></div>
+    <div class="h2">Memória de cálculo <span class="tbl-sub">armazenagem em entreposto</span></div>
+    <div class="calc-wrap">
+      <div class="calc-scroll"><table class="calc">
+        <thead><tr><th>Período</th><th>CIF</th><th>Alíquota</th><th>Data início</th><th>Data fim</th><th>Dias</th><th>Valor cobrado</th></tr></thead>
+        <tbody>
+          <tr><td>1º período – 15 dias</td><td>R$ 94.411,86</td><td>0,35%</td><td>22/06/2026</td><td>06/07/2026</td><td>15</td><td class="hi">R$ 330,44</td></tr>
+          <tr><td>2º período – 16º ao 59º dia (ao dia)</td><td>R$ 94.411,86</td><td>0,15%</td><td>07/07/2026</td><td>19/08/2026</td><td>44</td><td class="hi">R$ 6.231,18</td></tr>
+          <tr><td>3º período – a partir do 60º dia (ao dia)</td><td>R$ 94.411,86</td><td>0,30%</td><td>20/08/2026</td><td>05/10/2026 (prévia)</td><td>47</td><td class="hi">R$ 13.312,07</td></tr>
+          <tr class="sum"><td colspan="6" class="lbl">Total armazenagem</td><td>R$ 19.873,69</td></tr>
+          <tr class="pk"><td colspan="6" class="lbl">Pacote de Serviços Braskarne<span class="pk-sub">valor cobrado para toda a carga · 108 t</span></td><td>R$ 29.021,76</td></tr>
+          <tr class="rat"><td colspan="6" class="lbl">1º lote · 81 t · <b>75%</b> do pacote</td><td>R$ 21.766,31</td></tr>
+          <tr class="rat last"><td colspan="6" class="lbl">2º lote · 27 t · <b>25%</b> do pacote</td><td><b>R$ 7.255,44</b></td></tr>
+          <tr class="lote"><td colspan="6" class="lbl">Total deste relatório · 2º lote (armazenagem + 25% do pacote)</td><td>R$ 27.129,13</td></tr>
+          <tr class="grand"><td colspan="6" class="lbl">Total geral · lotes 1 e 2 (armazenagem dos dois lotes + pacote inteiro)</td><td>R$ 86.702,15</td></tr>
+        </tbody>
+      </table></div>
+      <div class="calc-note">A armazenagem do <b>3º período</b> está calculada até <b>05/10/2026</b> (47 dias). Se a retirada ocorrer em outra data, o valor varia em <b>R$ 283,24 por dia</b> (0,30% × CIF).</div>
+    </div>
+
+    <div class="charts-grid"><div class="chart-wrap full"><div class="chart-title">Desembaraço por item — estudo x fechamento</div>
+      <div style="position:relative;height:340px"><canvas id="dChart"></canvas></div></div></div>
+  </div>
+
+  <div id="tab-unit" class="section">
+    <div class="unit-card-grid">
+      <div class="unit-card blue"><div class="unit-card-label">Custo unitário estudo</div><div class="unit-card-val">R$ 5,65</div><div class="unit-card-sub">por kg - total R$ 152.542,04</div></div>
+      <div class="unit-card orange"><div class="unit-card-label">Custo unitário fechamento</div><div class="unit-card-val">R$ 6,23</div><div class="unit-card-sub">por kg - total R$ 168.117,70</div></div>
+      <div class="unit-card red"><div class="unit-card-label">Variação unitária</div><div class="unit-card-val">+R$ 0,58</div><div class="unit-card-sub">+10,21% por kg - +R$ 15.575,66 no total</div></div>
+    </div>
+    <div class="charts-grid">
+      <div class="chart-wrap full"><div class="chart-title">Custo unitário (R$/kg) por categoria</div>
+        <div class="chart-legend"><span class="leg-item"><span class="leg-dot" style="background:#2563eb"></span>Estudo</span><span class="leg-item"><span class="leg-dot" style="background:#ea580c"></span>Fechamento</span></div>
+        <div style="position:relative;height:340px"><canvas id="unitBarChart"></canvas></div></div>
+      <div class="chart-wrap"><div class="chart-title">Composição do custo unitário do estudo</div><div style="position:relative;height:300px"><canvas id="unitPieApr"></canvas></div></div>
+      <div class="chart-wrap"><div class="chart-title">Composição do custo unitário do fechamento</div><div style="position:relative;height:300px"><canvas id="unitPieRea"></canvas></div></div>
     </div>
   </div>
 </div>
-
 <script>
-const cats = ['Produto','Impostos','Frete marítimo','Desp. desembaraço','Seguro','Frete rodoviário'];
-const apr = [168367.36, 68023.12, 14823.80, 11145.51, 1213.69, 11400.00];
-const rea = [188645.21, 74128.61, 11354.03, 8522.27, 760.21, 24384.85];
-const vars = [12.04, 8.98, -23.41, -23.54, -37.36, 113.90];
-
-const fmtBRL = v => 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
-const fmtK = v => 'R$ ' + (v/1000).toFixed(1) + 'k';
-
-// Build table rows
-const tableWrap = document.querySelector('.table-wrap');
-cats.forEach((c, i) => {
-  const diff = rea[i] - apr[i];
-  const isUp = vars[i] >= 0;
-  const pct = Math.abs(rea[i]/apr[i]*100).toFixed(0);
-  const row = document.createElement('div');
-  row.className = 'table-row';
-  row.innerHTML = `
-    <span class="cat">${c}</span>
-    <span class="val">${fmtBRL(apr[i])}</span>
-    <span class="val real">${fmtBRL(rea[i])}</span>
-    <span class="val" style="color:${isUp?'var(--red)':'var(--green)'}">${isUp?'+':''}${fmtBRL(diff)}</span>
-    <span style="text-align:right"><span class="badge ${isUp?'up':'down'}">${isUp?'▲':'▼'} ${Math.abs(vars[i]).toFixed(2)}%</span></span>
-    <div class="bar-wrap" style="grid-column:1/-1">
-      <div class="bar-fill" style="width:0%;background:${isUp?'var(--red)':'var(--green)'}" data-pct="${pct}"></div>
-    </div>
-  `;
-  tableWrap.appendChild(row);
-});
-
-// Animate bars
-setTimeout(() => {
-  document.querySelectorAll('.bar-fill').forEach(b => {
-    b.style.width = Math.min(parseInt(b.dataset.pct), 100) + '%';
-  });
-}, 300);
-
-const gridColor = 'rgba(255,255,255,0.06)';
-const textColor = '#7a7880';
-const fontMono = "'DM Mono', monospace";
-
-// BAR CHART
-new Chart(document.getElementById('barChart'), {
-  type: 'bar',
-  data: {
-    labels: cats,
-    datasets: [
-      { label: 'Aprovado', data: apr, backgroundColor: 'rgba(78,156,245,0.7)', borderRadius: 6, borderSkipped: false },
-      { label: 'Realizado', data: rea, backgroundColor: 'rgba(240,160,75,0.7)', borderRadius: 6, borderSkipped: false }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + fmtBRL(ctx.parsed.y) } } },
-    scales: {
-      x: { ticks: { color: textColor, font: { family: fontMono, size: 11 }, autoSkip: false, maxRotation: 25 }, grid: { color: gridColor } },
-      y: { ticks: { color: textColor, font: { family: fontMono, size: 11 }, callback: fmtK }, grid: { color: gridColor } }
-    }
-  }
-});
-
-// VAR CHART
-new Chart(document.getElementById('varChart'), {
-  type: 'bar',
-  data: {
-    labels: cats,
-    datasets: [{ label: 'Variação %', data: vars, backgroundColor: vars.map(v => v >= 0 ? 'rgba(242,98,98,0.7)' : 'rgba(86,209,140,0.7)'), borderRadius: 6 }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y.toFixed(2) + '%' } } },
-    scales: {
-      x: { ticks: { color: textColor, font: { family: fontMono, size: 10 }, autoSkip: false, maxRotation: 30 }, grid: { color: gridColor } },
-      y: { ticks: { color: textColor, font: { family: fontMono, size: 11 }, callback: v => v + '%' }, grid: { color: gridColor } }
-    }
-  }
-});
-
-// PIE CHART
-const pieColors = ['#4e9cf5','#f0a04b','#56d18c','#c9b8ff','#f26262','#f5c842'];
-new Chart(document.getElementById('pieChart'), {
-  type: 'doughnut',
-  data: {
-    labels: cats,
-    datasets: [{ data: rea, backgroundColor: pieColors, borderColor: '#16161a', borderWidth: 3, hoverOffset: 8 }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'bottom', labels: { color: textColor, font: { family: fontMono, size: 11 }, padding: 12, boxWidth: 10 } },
-      tooltip: { callbacks: { label: ctx => ' ' + fmtBRL(ctx.parsed) + ' (' + (ctx.parsed/307795.18*100).toFixed(1) + '%)' } }
-    }
-  }
-});
-
-// UNIT BAR
-new Chart(document.getElementById('unitChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Custo unitário'],
-    datasets: [
-      { label: 'Aprovado', data: [11955.37], backgroundColor: 'rgba(78,156,245,0.7)', borderRadius: 8 },
-      { label: 'Realizado', data: [13382.40], backgroundColor: 'rgba(240,160,75,0.7)', borderRadius: 8 }
-    ]
-  },
-  options: {
-    indexAxis: 'y',
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + fmtBRL(ctx.parsed.x) } } },
-    scales: {
-      x: { ticks: { color: textColor, font: { family: fontMono, size: 11 }, callback: fmtK }, grid: { color: gridColor }, min: 10000 },
-      y: { ticks: { color: textColor, font: { family: fontMono, size: 11 } }, grid: { color: gridColor } }
-    }
-  }
-});
-
-// UNIT PIE
-new Chart(document.getElementById('unitPieChart'), {
-  type: 'doughnut',
-  data: {
-    labels: cats,
-    datasets: [{ data: rea, backgroundColor: pieColors, borderColor: '#16161a', borderWidth: 3, hoverOffset: 8 }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'bottom', labels: { color: textColor, font: { family: fontMono, size: 11 }, padding: 12, boxWidth: 10 } },
-      tooltip: { callbacks: { label: ctx => ' ' + fmtBRL(ctx.parsed / 307795.18 * 13382.40) + '/un' } }
-    }
-  }
-});
-
-function showTab(tab) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  event.target.classList.add('active');
+const s4=[['AFRMM - Marinha Mercante',544.48,906.86],['Pacote Braskarne (25% do pacote)',0,7255.44],['Armazenagem 1º período (22/06 a 06/07)',2007,330.44],['Armazenagem 2º período (07/07 a 19/08)',0,6231.18],['Armazenagem 3º período (20/08 a 05/10)',0,13312.07],['Despachante e taxas',2890,2625],['Lavagem de CTNR',250,37.50]];
+const s3=[['Liberação de BL',650,132.46],['Capatazia / THC',1200,920],['Desconsolidação',535.60,92.73],['IOF',0,370.90],['Drop off / Damage Fee',120,466.27],['Bunker',155,39.74],['Logistic Fee',250,238.43],['ISPS no destino',267.80,211.94]];
+const imp=[['Imposto de Importação (I.I.)',21928.96,11274.84],['IPI',3563.46,3420.04],['PIS',1842.03,1973.10],['COFINS',8464.58,9066.85],['Taxa Siscomex',214.50,154.23]];
+const T=[['Produto (FOB)',82039.50,83338.75],['Frete internacional',5356,10597],['Seguro',547.38,476.11],['Impostos de importação',36013.53,25889.06,imp],['ICMS',3365.75,3245.83],['Taxas de frete marítimo',3178.40,2472.46,s3],['Desembaraço aduaneiro',5691.48,30698.49,s4],['Frete terrestre (porto → cliente)',16350,11400]];
+const cats=T.map(t=>t[0]),apr=T.map(t=>t[1]),rea=T.map(t=>t[2]);
+const totalApr=152542.04,totalReal=168117.70,qtd=27000;
+const unitApr=apr.map(v=>v/qtd),unitRea=rea.map(v=>v/qtd);
+const fmtBRL=v=>'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtK=v=>'R$ '+(v/1000).toFixed(0)+'k';
+const gc='rgba(128,128,128,0.15)',tc='#999',ff="'Poppins', sans-serif";
+const sf=getComputedStyle(document.body).getPropertyValue('--surface').trim()||'#fff';
+const pieColors=['#2563eb','#dc2626','#7c3aed','#1e9e62','#10b981','#f59e0b','#94a3b8','#ea580c'];
+function rowHTML(c,a,r,bar){
+  const d=r-a;let badge;
+  if(a===0)badge='<span class="badge up">novo</span>';
+  else if(r===0)badge='<span class="badge down">zerado</span>';
+  else{const v=d/a*100,cls=Math.abs(v)<0.005?'neutral':v>0?'up':'down';badge=`<span class="badge ${cls}">${v>0?'▲':'▼'} ${Math.abs(v).toFixed(2)}%</span>`}
+  const dc=d>0?'var(--red)':d<0?'var(--green)':'var(--muted2)';
+  const pct=Math.min(Math.max(r/Math.max(...rea)*100,5),100).toFixed(0);
+  return `<span class="cat-name">${c}</span><span class="val">${fmtBRL(a)}</span><span class="val hi">${fmtBRL(r)}</span><span class="val" style="color:${dc}">${d>=0?'+':''}${fmtBRL(d)}</span><span>${badge}</span>${bar?`<div class="bar-wrap"><div class="bar-fill" style="width:0%;background:${d>0?'#dc2626':'#1e9e62'}" data-pct="${pct}"></div></div>`:''}`}
+function totalRow(a,r){const d=r-a,v=d/a*100;return `<span class="cat-name" style="font-weight:700">TOTAL</span><span class="val" style="color:var(--blue);font-weight:700">${fmtBRL(a)}</span><span class="val" style="color:var(--red);font-weight:700">${fmtBRL(r)}</span><span class="val" style="color:var(--red);font-weight:700">+${fmtBRL(d)}</span><span><span class="badge up">▲ ${v.toFixed(2)}%</span></span>`}
+function add(el,cls,html,fn){const d=document.createElement('div');d.className=cls;d.innerHTML=html;if(fn)d.addEventListener('click',fn);el.appendChild(d);return d}
+const head=document.querySelector('#mainTable .table-head').outerHTML;
+function build(el,rows,expand){
+  rows.forEach(t=>{const has=expand&&t[3];const subs=[];
+    add(el,'table-row'+(has?' parent':''),rowHTML(t[0],t[1],t[2],expand),has?function(){this.classList.toggle('open');subs.forEach(s=>s.classList.toggle('show'))}:null);
+    if(has)t[3].forEach(x=>subs.push(add(el,'table-row sub',rowHTML(x[0],x[1],x[2],false))));});
 }
+build(document.getElementById('mainTable'),T,true);
+add(document.getElementById('mainTable'),'table-row total',totalRow(totalApr,totalReal));
+[['tblDesemb',s4,5691.48,30698.49]].forEach(([id,rows,a,r])=>{const el=document.getElementById(id);el.innerHTML=head;build(el,rows,false);add(el,'table-row total',totalRow(a,r))});
+setTimeout(()=>document.querySelectorAll('.bar-fill').forEach(b=>b.style.width=b.dataset.pct+'%'),300);
+const xo={ticks:{color:tc,font:{family:ff,size:10},maxRotation:30},grid:{color:gc}};
+const yo=cb=>({ticks:{color:tc,font:{family:ff,size:11},callback:cb},grid:{color:gc}});
+const base={responsive:true,maintainAspectRatio:false};
+const dsets=(a,r)=>[{label:'Estudo',data:a,backgroundColor:'rgba(37,99,235,0.75)',borderRadius:6},{label:'Fechamento',data:r,backgroundColor:'rgba(234,88,12,0.75)',borderRadius:6}];
+const legB={position:'bottom',labels:{color:tc,font:{family:ff,size:9},padding:8,boxWidth:8}};
+new Chart(barChart,{type:'bar',data:{labels:cats,datasets:dsets(apr,rea)},options:{...base,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmtBRL(c.parsed.y)}}},scales:{x:xo,y:yo(fmtK)}}});
+const dif=cats.map((_,i)=>rea[i]-apr[i]);
+new Chart(varChart,{type:'bar',data:{labels:cats,datasets:[{data:dif,backgroundColor:dif.map(v=>v>0?'rgba(220,38,38,0.7)':'rgba(30,158,98,0.7)'),borderRadius:6}]},options:{...base,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmtBRL(c.parsed.x)}}},scales:{x:yo(fmtK),y:{ticks:{color:tc,font:{family:ff,size:9}},grid:{display:false}}}}});
+const pie=(id,d,unit)=>{const tot=d.reduce((a,b)=>a+b,0);new Chart(id,{type:'doughnut',data:{labels:cats,datasets:[{data:d,backgroundColor:pieColors,borderColor:sf,borderWidth:3,hoverOffset:8}]},options:{...base,plugins:{legend:legB,tooltip:{callbacks:{label:c=>' '+(unit?'R$ '+c.parsed.toFixed(4)+'/kg':fmtBRL(c.parsed))+' ('+(c.parsed/tot*100).toFixed(1)+'%)'}}}}})};
+pie(pieChart,rea,false);pie(unitPieApr,unitApr,true);pie(unitPieRea,unitRea,true);
+new Chart(unitBarChart,{type:'bar',data:{labels:cats,datasets:dsets(unitApr,unitRea)},options:{...base,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' R$ '+c.parsed.y.toFixed(4)+'/kg'}}},scales:{x:xo,y:yo(v=>'R$ '+v.toFixed(2))}}});
+new Chart(dChart,{type:'bar',data:{labels:s4.map(x=>x[0].replace(/ \(.*\)/,'')),datasets:dsets(s4.map(x=>x[1]),s4.map(x=>x[2]))},options:{...base,plugins:{legend:{display:true,position:'bottom',labels:{color:tc,font:{family:ff,size:11}}},tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+fmtBRL(c.parsed.y)}}},scales:{x:xo,y:yo(fmtK)}}});
+function showTab(t,e){document.querySelector('.tabs').classList.add('seen');document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+t).classList.add('active');e.target.classList.add('active')}
 </script>
 </body>
 </html>
